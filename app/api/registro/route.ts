@@ -33,9 +33,12 @@ export async function POST(request: Request) {
     const registro = result[0];
 
     // Enviar notificación por email con Resend
-    await resend.emails.send({
-      from: "Luisito Viajes <notificaciones@tudominio.com>", // Cambia a tu dominio verificado en Resend
-      to: process.env.NOTIFICATION_EMAIL!, // Email donde recibirás las notificaciones
+    // Soporta múltiples emails separados por coma en NOTIFICATION_EMAIL
+    const notificationEmails = process.env.NOTIFICATION_EMAIL!.split(",").map(e => e.trim());
+    
+    const emailResult = await resend.emails.send({
+      from: "Luisito Viajes <onboarding@resend.dev>", // Dominio de prueba de Resend
+      to: notificationEmails, // Emails donde recibirán las notificaciones
       subject: `🎉 Nuevo registro para Minca Mágica - ${nombre} ${apellido}`,
       html: `
         <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f8fafc; padding: 40px 20px;">
@@ -110,10 +113,13 @@ export async function POST(request: Request) {
       `,
     });
 
+    console.log("Resultado envío email:", emailResult);
+
     return NextResponse.json({
       success: true,
       message: "Registro exitoso",
       id: registro.id,
+      emailSent: emailResult.data ? true : false,
     });
   } catch (error) {
     console.error("Error en registro:", error);
