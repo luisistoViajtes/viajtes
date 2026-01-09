@@ -111,13 +111,12 @@ export default function Home() {
         setShowSuccessModal(true);
         form.reset();
       } else {
-        throw new Error(data.error || "Error al registrar");
+        // Mostrar error específico del servidor
+        setErrorModal({ show: true, message: data.error || "Error al procesar el registro" });
       }
     } catch (error) {
       console.error("Error!", error);
-      // Si falla el registro, mostramos alerta pero permitimos continuar
-      setErrorModal({ show: true, message: "Hubo un problema guardando tus datos, pero puedes continuar al pago." });
-      setShowSuccessModal(true);
+      setErrorModal({ show: true, message: "Error de conexión. Por favor intenta de nuevo." });
     } finally {
       setIsSubmitting(false);
     }
@@ -697,14 +696,17 @@ export default function Home() {
 
               <div className="space-y-2">
                 <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">
-                  WhatsApp
+                  WhatsApp <span className="text-slate-300">(10 dígitos)</span>
                 </label>
                 <input
                   type="tel"
                   name="whatsapp"
                   required
-                  placeholder="300 000 0000"
-                  className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all placeholder:text-slate-300"
+                  pattern="3[0-9]{9}"
+                  maxLength={10}
+                  placeholder="3001234567"
+                  title="Número colombiano de 10 dígitos que empiece con 3"
+                  className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all placeholder:text-slate-300 invalid:border-red-300 invalid:focus:ring-red-500"
                 />
               </div>
 
@@ -716,8 +718,10 @@ export default function Home() {
                   type="email"
                   name="email"
                   required
+                  pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
                   placeholder="tu@email.com"
-                  className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all placeholder:text-slate-300"
+                  title="Ingresa un correo electrónico válido"
+                  className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all placeholder:text-slate-300 invalid:border-red-300 invalid:focus:ring-red-500"
                 />
               </div>
 

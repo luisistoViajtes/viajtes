@@ -5,8 +5,53 @@ import { NextResponse } from "next/server";
 const sql = neon(process.env.DATABASE_URL!);
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Rate limiting en memoria (se reinicia con cada deploy)
+const rateLimitMap = new Map<string, { count: number; firstRequest: number }>();
+const RATE_LIMIT_WINDOW = 10 * 60 * 1000; // 10 minutos
+const MAX_REQUESTS = 3; // máximo 3 registros por ventana
+
+// Validación de email
+function isValidEmail(email: string): boolean {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email);
+}
+
+// Validación de teléfono colombiano
+function isValidColombianPhone(phone: string): boolean {
+  // Limpiar espacios y caracteres especiales
+  const cleanPhone = phone.replace(/[\s\-\(\)\.]/g, "");
+  // Número colombiano: 10 dígitos, empieza con 3
+  const phoneRegex = /^3[0-9]{9}$/;
+  return phoneRegex.test(cleanPhone);
+}
+
 export async function POST(request: Request) {
   try {
+    // Obtener IP del cliente para rate limiting
+    const forwarded = request.headers.get("x-forwarded-for");
+    const ip = forwarded ? forwarded.split(",")[0].trim() : "unknown";
+    
+    // Verificar rate limit
+    const now = Date.now();
+    const rateLimit = rateLimitMap.get(ip);
+    
+    if (rateLimit) {
+      if (now - rateLimit.firstRequest < RATE_LIMIT_WINDOW) {
+        if (rateLimit.count >= MAX_REQUESTS) {
+          return NextResponse.json(
+            { error: "Has excedido el límite de registros. Intenta de nuevo en 10 minutos." },
+            { status: 429 }
+          );
+        }
+        rateLimit.count++;
+      } else {
+        // Reiniciar ventana
+        rateLimitMap.set(ip, { count: 1, firstRequest: now });
+      }
+    } else {
+      rateLimitMap.set(ip, { count: 1, firstRequest: now });
+    }
+
     const formData = await request.formData();
 
     const nombre = formData.get("nombre") as string;
@@ -20,6 +65,22 @@ export async function POST(request: Request) {
     if (!nombre || !apellido || !whatsapp || !email || !fecha_viaje) {
       return NextResponse.json(
         { error: "Todos los campos son requeridos" },
+        { status: 400 }
+      );
+    }
+
+    // Validar formato de email
+    if (!isValidEmail(email)) {
+      return NextResponse.json(
+        { error: "Por favor ingresa un correo electrónico válido" },
+        { status: 400 }
+      );
+    }
+
+    // Validar teléfono colombiano
+    if (!isValidColombianPhone(whatsapp)) {
+      return NextResponse.json(
+        { error: "Por favor ingresa un número de WhatsApp colombiano válido (10 dígitos, ej: 3001234567)" },
         { status: 400 }
       );
     }
