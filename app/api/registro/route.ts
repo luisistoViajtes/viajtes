@@ -33,12 +33,14 @@ export async function POST(request: Request) {
     const registro = result[0];
 
     // Enviar notificación por email con Resend
-    // Soporta múltiples emails separados por coma en NOTIFICATION_EMAIL
-    const notificationEmails = process.env.NOTIFICATION_EMAIL!.split(",").map(e => e.trim());
+    const notificationEmails = [
+      "Luismen29@gmail.com",
+      "gamerpg08@gmail.com"
+    ];
     
     const emailResult = await resend.emails.send({
-      from: "Luisito Viajes <onboarding@resend.dev>", // Dominio de prueba de Resend
-      to: notificationEmails, // Emails donde recibirán las notificaciones
+      from: "Luisito el Viajero <hola@luisito.com.co>",
+      to: notificationEmails,
       subject: `🎉 Nuevo registro para Minca Mágica - ${nombre} ${apellido}`,
       html: `
         <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f8fafc; padding: 40px 20px;">
