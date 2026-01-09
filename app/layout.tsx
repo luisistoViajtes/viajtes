@@ -11,6 +11,10 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Minca Mágica | Luisito el Viajero",
   description: "El escape que tu alma estaba pidiendo. Reconecta con la Sierra Nevada saliendo desde Barranquilla.",
+  icons: {
+    icon: "/Luisito_png_cfhgb1.png",
+    apple: "/Luisito_png_cfhgb1.png",
+  },
 };
 
 export default function RootLayout({
