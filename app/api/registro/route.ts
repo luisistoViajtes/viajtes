@@ -13,10 +13,11 @@ export async function POST(request: Request) {
     const apellido = formData.get("apellido") as string;
     const whatsapp = formData.get("whatsapp") as string;
     const email = formData.get("email") as string;
+    const fecha_viaje = formData.get("fecha_viaje") as string;
     const tratamiento_datos = formData.get("tratamiento_datos") === "on";
 
     // Validar campos requeridos
-    if (!nombre || !apellido || !whatsapp || !email) {
+    if (!nombre || !apellido || !whatsapp || !email || !fecha_viaje) {
       return NextResponse.json(
         { error: "Todos los campos son requeridos" },
         { status: 400 }
@@ -41,7 +42,7 @@ export async function POST(request: Request) {
     const emailResult = await resend.emails.send({
       from: "Luisito el Viajero <hola@luisito.com.co>",
       to: notificationEmails,
-      subject: `🎉 Nuevo registro para Minca Mágica - ${nombre} ${apellido}`,
+      subject: `🎉 Nuevo registro - ${nombre} ${apellido} - ${fecha_viaje}`,
       html: `
         <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f8fafc; padding: 40px 20px;">
           <div style="background: linear-gradient(135deg, #064e3b 0%, #065f46 100%); padding: 30px; border-radius: 24px 24px 0 0; text-align: center;">
@@ -51,6 +52,9 @@ export async function POST(request: Request) {
             <p style="color: white; margin: 10px 0 0; font-size: 14px; opacity: 0.9;">
               Minca Mágica - Luisito el Viajero
             </p>
+            <div style="margin-top: 15px; display: inline-block; background: #34d399; color: #064e3b; padding: 10px 20px; border-radius: 50px; font-weight: 900; font-size: 16px;">
+              📅 ${fecha_viaje}
+            </div>
           </div>
           
           <div style="background: white; padding: 30px; border-radius: 0 0 24px 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
@@ -59,6 +63,14 @@ export async function POST(request: Request) {
             </h2>
             
             <table style="width: 100%; border-collapse: collapse;">
+              <tr style="background: #ecfdf5;">
+                <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #065f46; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; width: 120px; font-weight: 700;">
+                  📅 Fecha Viaje
+                </td>
+                <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #065f46; font-weight: 900; font-size: 18px;">
+                  ${fecha_viaje}
+                </td>
+              </tr>
               <tr>
                 <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; width: 120px;">
                   Nombre

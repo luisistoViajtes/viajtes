@@ -33,6 +33,8 @@ export default function Home() {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [stats, setStats] = useState({ views: 0, visitors: 0 });
   const [countdown, setCountdown] = useState(3);
+  const [fechaSeleccionada, setFechaSeleccionada] = useState<string | null>(null);
+  const [errorModal, setErrorModal] = useState<{ show: boolean; message: string }>({ show: false, message: "" });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -90,6 +92,10 @@ export default function Home() {
 
     const form = e.currentTarget;
     const formData = new FormData(form);
+    
+    if (fechaSeleccionada) {
+      formData.append("fecha_viaje", fechaSeleccionada);
+    }
 
     try {
       const response = await fetch("/api/registro", {
@@ -110,7 +116,7 @@ export default function Home() {
     } catch (error) {
       console.error("Error!", error);
       // Si falla el registro, mostramos alerta pero permitimos continuar
-      alert("Hubo un problema guardando tus datos, pero puedes continuar al pago.");
+      setErrorModal({ show: true, message: "Hubo un problema guardando tus datos, pero puedes continuar al pago." });
       setShowSuccessModal(true);
     } finally {
       setIsSubmitting(false);
@@ -455,69 +461,105 @@ export default function Home() {
       </section>
 
       {/* Reserva y Fechas */}
-      <section id="reserva" className="py-12 md:py-24 px-4 md:px-6 bg-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="bg-slate-900 rounded-3xl md:rounded-[4rem] p-6 sm:p-10 md:p-16 lg:p-24 text-white shadow-2xl border border-white/5">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-6 md:mb-12 tracking-tighter uppercase italic">
+      <section id="reserva" className="py-8 sm:py-12 md:py-20 px-4 md:px-6 bg-white scroll-mt-28 md:scroll-mt-32">
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="bg-slate-900 rounded-2xl sm:rounded-3xl md:rounded-[3rem] p-5 sm:p-8 md:p-12 lg:p-16 text-white shadow-2xl border border-white/5">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-4 sm:mb-6 md:mb-8 tracking-tighter uppercase italic">
               ASEGURA TU CUPO
             </h2>
             
-            {/* Fechas */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8 mb-8 md:mb-16">
-              <div className="bg-white/5 border border-white/10 p-4 sm:p-6 md:p-8 rounded-2xl md:rounded-3xl flex items-center gap-3 sm:gap-5 hover:bg-emerald-500/10 transition-all cursor-default">
-                <Calendar className="text-emerald-400 shrink-0" size={28} />
-                <div className="text-left">
-                  <div className="font-black text-lg sm:text-xl md:text-2xl tracking-tight leading-none mb-1 text-emerald-400">
+            {/* Fechas - Seleccionables */}
+            <p className="text-slate-400 text-[10px] sm:text-xs mb-3 uppercase tracking-widest font-bold">
+              Selecciona tu fecha de viaje
+            </p>
+            <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-6 mb-5 sm:mb-8 md:mb-10">
+              <button
+                type="button"
+                onClick={() => setFechaSeleccionada("11 de Enero 2026")}
+                className={`relative p-3 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl md:rounded-3xl flex items-center gap-2 sm:gap-3 md:gap-4 transition-all cursor-pointer text-left ${
+                  fechaSeleccionada === "11 de Enero 2026"
+                    ? "bg-emerald-500/20 border-2 border-emerald-500 scale-[1.02]"
+                    : "bg-white/5 border border-white/10 hover:bg-emerald-500/10"
+                }`}
+              >
+                {fechaSeleccionada === "11 de Enero 2026" && (
+                  <div className="absolute top-2 right-2 w-5 h-5 sm:w-6 sm:h-6 bg-emerald-500 rounded-full flex items-center justify-center">
+                    <Check size={12} className="text-white" />
+                  </div>
+                )}
+                <Calendar className="text-emerald-400 shrink-0 hidden sm:block" size={24} />
+                <div>
+                  <div className="font-black text-sm sm:text-lg md:text-xl tracking-tight leading-none mb-0.5 sm:mb-1 text-emerald-400">
                     11 ENERO
                   </div>
-                  <div className="text-[8px] sm:text-[10px] text-slate-400 uppercase tracking-wider md:tracking-widest font-black">
-                    DOMINGO 2026 - ÚLTIMOS CUPOS
+                  <div className="text-[7px] sm:text-[9px] md:text-[10px] text-slate-400 uppercase tracking-wider font-bold">
+                    DOM 2026 - ÚLTIMOS
                   </div>
                 </div>
-              </div>
-              <div className="bg-white/5 border border-white/10 p-4 sm:p-6 md:p-8 rounded-2xl md:rounded-3xl flex items-center gap-3 sm:gap-5 hover:bg-emerald-500/10 transition-all cursor-default">
-                <Calendar className="text-emerald-400 shrink-0" size={28} />
-                <div className="text-left">
-                  <div className="font-black text-lg sm:text-xl md:text-2xl tracking-tight leading-none mb-1">
+              </button>
+              <button
+                type="button"
+                onClick={() => setFechaSeleccionada("01 de Febrero 2026")}
+                className={`relative p-3 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl md:rounded-3xl flex items-center gap-2 sm:gap-3 md:gap-4 transition-all cursor-pointer text-left ${
+                  fechaSeleccionada === "01 de Febrero 2026"
+                    ? "bg-emerald-500/20 border-2 border-emerald-500 scale-[1.02]"
+                    : "bg-white/5 border border-white/10 hover:bg-emerald-500/10"
+                }`}
+              >
+                {fechaSeleccionada === "01 de Febrero 2026" && (
+                  <div className="absolute top-2 right-2 w-5 h-5 sm:w-6 sm:h-6 bg-emerald-500 rounded-full flex items-center justify-center">
+                    <Check size={12} className="text-white" />
+                  </div>
+                )}
+                <Calendar className="text-emerald-400 shrink-0 hidden sm:block" size={24} />
+                <div>
+                  <div className="font-black text-sm sm:text-lg md:text-xl tracking-tight leading-none mb-0.5 sm:mb-1">
                     01 FEBRERO
                   </div>
-                  <div className="text-[8px] sm:text-[10px] text-slate-400 uppercase tracking-wider md:tracking-widest font-black">
-                    DOMINGO 2026 - DISPONIBLE
+                  <div className="text-[7px] sm:text-[9px] md:text-[10px] text-slate-400 uppercase tracking-wider font-bold">
+                    DOM 2026 - DISPONIBLE
                   </div>
                 </div>
-              </div>
+              </button>
             </div>
             
             {/* Precio */}
-            <div className="mb-8 md:mb-16">
-              <div className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black mb-4 md:mb-6 tracking-tighter leading-none">
-                $290.000
+            <div className="mb-5 sm:mb-8 md:mb-10">
+              <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-1 sm:mb-2 tracking-tighter leading-none">
+                $290.000 <span className="text-xs sm:text-sm md:text-base text-slate-500 font-normal uppercase tracking-widest">COP</span>
               </div>
-              <span className="text-sm sm:text-base md:text-xl text-slate-500 font-normal uppercase tracking-[0.2em] md:tracking-[0.3em]">
-                COP
-              </span>
-              <div className="flex flex-col items-center gap-4 mt-4 md:mt-6">
-                <p className="text-emerald-400 font-black uppercase tracking-[0.1em] md:tracking-[0.2em] text-xs sm:text-sm bg-emerald-500/10 inline-block px-4 sm:px-6 md:px-8 py-2 sm:py-3 rounded-full border border-emerald-500/30 shadow-lg shadow-emerald-500/10">
-                  Reserva con solo $60.000/persona
+              <div className="mt-3 sm:mt-4">
+                <p className="text-emerald-400 font-black uppercase tracking-wider text-[10px] sm:text-xs bg-emerald-500/10 inline-block px-3 sm:px-5 md:px-6 py-1.5 sm:py-2 rounded-full border border-emerald-500/30">
+                  Reserva con $60.000/persona
                 </p>
               </div>
             </div>
             
             {/* Botón */}
             <button
-              onClick={() => setShowRegistroModal(true)}
-              className="block w-full py-5 sm:py-6 md:py-8 bg-emerald-500 text-slate-950 rounded-2xl md:rounded-3xl text-xl sm:text-2xl md:text-3xl font-black shadow-2xl hover:bg-emerald-400 transition-all transform hover:-translate-y-2 active:scale-[0.98] uppercase tracking-tighter cursor-pointer"
+              onClick={() => {
+                if (!fechaSeleccionada) {
+                  setErrorModal({ show: true, message: "Por favor selecciona una fecha de viaje antes de continuar." });
+                  return;
+                }
+                setShowRegistroModal(true);
+              }}
+              className={`block w-full py-4 sm:py-5 md:py-6 rounded-xl sm:rounded-2xl text-lg sm:text-xl md:text-2xl font-black shadow-2xl transition-all transform active:scale-[0.98] uppercase tracking-tighter cursor-pointer ${
+                fechaSeleccionada
+                  ? "bg-emerald-500 text-slate-950 hover:bg-emerald-400 hover:-translate-y-1"
+                  : "bg-slate-700 text-slate-400"
+              }`}
             >
-              RESERVAR POR NEQUI
+              {fechaSeleccionada ? "RESERVAR POR NEQUI" : "SELECCIONA UNA FECHA"}
             </button>
             
-            <p className="mt-6 md:mt-8 text-slate-500 text-[10px] sm:text-xs font-bold uppercase tracking-widest italic">
+            <p className="mt-4 sm:mt-5 text-slate-500 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest italic">
               Punto de encuentro: Barranquilla
             </p>
             
-            <div className="mt-4 md:mt-6 pt-4 md:pt-6 border-t border-white/10">
-              <p className="text-slate-500 text-[10px] sm:text-xs">
-                ¿Necesitas cancelar? Escríbenos por{" "}
+            <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/10">
+              <p className="text-slate-500 text-[9px] sm:text-[10px]">
+                ¿Necesitas cancelar?{" "}
                 <a
                   href="https://wa.me/573209344964?text=Hola!%20Necesito%20cancelar%20mi%20reserva%20de%20Minca%20Mágica"
                   target="_blank"
@@ -606,6 +648,11 @@ export default function Home() {
             </button>
 
             <div className="text-center mb-8">
+              {/* Fecha seleccionada */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold mb-4 border border-emerald-200">
+                <Calendar size={14} />
+                {fechaSeleccionada}
+              </div>
               <h2 className="text-sm font-bold text-emerald-600 tracking-[0.3em] uppercase mb-4">
                 Paso 1 de 2
               </h2>
@@ -814,6 +861,47 @@ export default function Home() {
               className="w-full py-4 bg-emerald-600 text-white rounded-2xl font-black hover:bg-emerald-700 transition-colors uppercase tracking-tight cursor-pointer"
             >
               Ir a pagar ahora ({countdown})
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Error */}
+      {errorModal.show && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setErrorModal({ show: false, message: "" });
+          }}
+        >
+          <div className="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl transform transition-all animate-pulse">
+            <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-8 w-8"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+              </svg>
+            </div>
+            <h3 className="text-xl font-black text-slate-900 mb-2 tracking-tighter">
+              ¡ATENCIÓN!
+            </h3>
+            <p className="text-slate-500 mb-6 leading-tight">
+              {errorModal.message}
+            </p>
+            <button
+              onClick={() => setErrorModal({ show: false, message: "" })}
+              className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black hover:bg-slate-800 transition-colors uppercase tracking-tight cursor-pointer"
+            >
+              Entendido
             </button>
           </div>
         </div>
