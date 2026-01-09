@@ -28,9 +28,11 @@ export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showRegistroModal, setShowRegistroModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [stats, setStats] = useState({ views: 0, visitors: 0 });
+  const [countdown, setCountdown] = useState(3);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,6 +66,24 @@ export default function Home() {
     registerView();
   }, []);
 
+  // Countdown para redirección al pago
+  useEffect(() => {
+    if (showSuccessModal) {
+      setCountdown(3);
+      const timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            window.location.href = "https://checkout.nequi.wompi.co/l/4NTTQO";
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [showSuccessModal]);
+
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -81,6 +101,7 @@ export default function Home() {
 
       if (response.ok && data.success) {
         setSubmitSuccess(true);
+        setShowRegistroModal(false);
         setShowSuccessModal(true);
         form.reset();
       } else {
@@ -94,13 +115,6 @@ export default function Home() {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const openNequiModal = () => {
-    localStorage.setItem("nequi_clicked", Date.now().toString());
-    setTimeout(() => {
-      setShowWhatsAppModal(true);
-    }, 500);
   };
 
   return (
@@ -171,7 +185,7 @@ export default function Home() {
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://images.unsplash.com/photo-1518495973542-4542c06a5843?q=80&w=2070&auto=format&fit=crop"
+            src="/Donde-queda-Minca-en-Santa-Marta 2.jpg"
             alt="Portada Minca"
             fill
             className="w-full h-full object-cover hero-zoom"
@@ -205,6 +219,94 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Sección Sobre Mí */}
+      <section className="py-20 bg-gradient-to-b from-white to-slate-50 px-6 overflow-hidden relative">
+        {/* SVG Colombia de fondo */}
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 opacity-5 pointer-events-none">
+          <svg width="400" height="500" viewBox="0 0 100 120" className="fill-emerald-600">
+            <path d="M50,5 C55,8 65,10 70,15 C75,20 78,28 80,35 C82,42 80,50 78,58 C76,66 72,74 68,82 C64,90 58,98 52,105 C50,108 48,108 46,105 C40,98 34,90 30,82 C26,74 22,66 20,58 C18,50 16,42 18,35 C20,28 23,20 28,15 C33,10 43,8 50,5 Z" />
+          </svg>
+        </div>
+        
+        <div className="max-w-5xl mx-auto relative z-10">
+          <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
+            {/* Foto con elementos */}
+            <div className="relative shrink-0">
+              {/* Círculo animado detrás */}
+              <div className="absolute inset-0 w-44 h-44 md:w-56 md:h-56 rounded-full bg-emerald-400/20 animate-ping" style={{ animationDuration: '3s' }}></div>
+              <div className="absolute inset-0 w-44 h-44 md:w-56 md:h-56 rounded-full bg-emerald-400/10 animate-pulse"></div>
+              
+              <div className="relative w-44 h-44 md:w-56 md:h-56 rounded-full overflow-hidden border-4 border-emerald-500 shadow-2xl shadow-emerald-500/30">
+                <Image
+                  src="/yoluisito.webp"
+                  alt="Luisito el Viajero"
+                  width={250}
+                  height={250}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              
+              {/* Bandera Colombia flotante */}
+              <div className="absolute -top-2 -right-2 text-2xl animate-bounce" style={{ animationDuration: '2s' }}>🇨🇴</div>
+            </div>
+            
+            {/* Contenido */}
+            <div className="text-center md:text-left flex-1">
+              <h2 className="text-3xl md:text-5xl font-black tracking-tighter uppercase mb-6">
+                Hola, soy <span className="text-emerald-500 italic">Luisito</span>
+              </h2>
+              
+              <div className="space-y-4 mb-8">
+                <p className="text-slate-600 text-base md:text-lg leading-relaxed">
+                  <span className="font-black text-emerald-600">+10 años creando viajes grupales</span>, recorriendo destinos y transformando el turismo en experiencias que se sienten y se recuerdan.
+                </p>
+                <p className="text-slate-600 text-base md:text-lg leading-relaxed">
+                  No improviso viajes: <span className="font-bold text-slate-800">diseño vivencias</span> con conocimiento, pasión y un profundo respeto por cada persona que confía en mí.
+                </p>
+                <p className="text-slate-700 text-base md:text-lg leading-relaxed font-medium italic">
+                  Aquí empiezas a viajar con alguien que <span className="text-emerald-600 font-black">vive el turismo</span>, no solo lo vende.
+                </p>
+              </div>
+              
+              {/* Redes sociales */}
+              <div className="flex flex-wrap justify-center md:justify-start gap-3">
+                <a
+                  href="https://instagram.com/luisitoelviajero"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 text-white rounded-full font-bold text-sm hover:scale-105 transition-all shadow-lg"
+                >
+                  <Instagram size={18} />
+                  Instagram
+                </a>
+                <a
+                  href="https://www.tiktok.com/@luisitoelviajero?_r=1&_t=ZS-92uvPleUxRX"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-3 bg-black text-white rounded-full font-bold text-sm hover:scale-105 transition-all shadow-lg"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                  </svg>
+                  TikTok
+                </a>
+                <a
+                  href="https://www.facebook.com/share/1EFKtLjbpf/?mibextid=wwXIfr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-3 bg-blue-600 text-white rounded-full font-bold text-sm hover:scale-105 transition-all shadow-lg"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                  </svg>
+                  Facebook
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Sección de Viajes Grupales */}
       <section className="py-24 bg-white px-6">
         <div className="max-w-7xl mx-auto">
@@ -224,7 +326,7 @@ export default function Home() {
             {/* Foto 1 */}
             <div className="overflow-hidden rounded-[2rem] shadow-xl hover:shadow-2xl transition-all">
               <Image
-                src="https://images.unsplash.com/photo-1501555088652-021faa106b9b?q=80&w=800&auto=format&fit=crop"
+                src="/IMG_2941.jpg"
                 alt="Viaje Minca 1"
                 width={600}
                 height={450}
@@ -234,7 +336,7 @@ export default function Home() {
             {/* Foto 2 */}
             <div className="overflow-hidden rounded-[2rem] shadow-xl hover:shadow-2xl transition-all md:translate-y-8">
               <Image
-                src="https://images.unsplash.com/photo-1527631746610-bca00a040d60?q=80&w=800&auto=format&fit=crop"
+                src="/IMG_2942.jpg"
                 alt="Viaje Minca 2"
                 width={600}
                 height={450}
@@ -244,133 +346,13 @@ export default function Home() {
             {/* Foto 3 */}
             <div className="overflow-hidden rounded-[2rem] shadow-xl hover:shadow-2xl transition-all">
               <Image
-                src="https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?q=80&w=800&auto=format&fit=crop"
+                src="/IMG_2943.jpg"
                 alt="Viaje Minca 3"
                 width={600}
                 height={450}
                 className="w-full h-[450px] object-cover hover:scale-110 transition-transform duration-700"
               />
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Sección Registro */}
-      <section id="registro" className="py-24 bg-slate-50 px-6">
-        <div className="max-w-3xl mx-auto">
-          <div className="bg-white rounded-[3rem] p-8 md:p-16 shadow-2xl border border-slate-100 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full -mr-16 -mt-16"></div>
-
-            <div className="text-center mb-12">
-              <h2 className="text-sm font-bold text-emerald-600 tracking-[0.3em] uppercase mb-4">
-                Paso 1 de 2
-              </h2>
-              <h3 className="text-4xl font-black tracking-tighter uppercase">
-                Datos del{" "}
-                <span className="text-emerald-500 italic">Viajero</span>
-              </h3>
-              <p className="text-slate-500 mt-2">
-                Completa tus datos para habilitar el pago de reserva.
-              </p>
-            </div>
-
-            <form
-              onSubmit={handleFormSubmit}
-              className="grid grid-cols-1 md:grid-cols-2 gap-6"
-            >
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">
-                  Nombre
-                </label>
-                <input
-                  type="text"
-                  name="nombre"
-                  required
-                  placeholder="Ej: Juan"
-                  className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all placeholder:text-slate-300"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">
-                  Apellido
-                </label>
-                <input
-                  type="text"
-                  name="apellido"
-                  required
-                  placeholder="Ej: Perez"
-                  className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all placeholder:text-slate-300"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">
-                  WhatsApp
-                </label>
-                <input
-                  type="tel"
-                  name="whatsapp"
-                  required
-                  placeholder="300 000 0000"
-                  className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all placeholder:text-slate-300"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">
-                  Correo Electrónico
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  placeholder="tu@email.com"
-                  className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all placeholder:text-slate-300"
-                />
-              </div>
-
-              <div className="md:col-span-2 flex items-center gap-3 py-4">
-                <input
-                  type="checkbox"
-                  id="datos"
-                  name="tratamiento_datos"
-                  required
-                  className="w-5 h-5 accent-emerald-500 cursor-pointer"
-                />
-                <label
-                  htmlFor="datos"
-                  className="text-xs text-slate-500 leading-tight cursor-pointer"
-                >
-                  Acepto el{" "}
-                  <span className="font-bold text-slate-700">
-                    tratamiento de datos personales
-                  </span>{" "}
-                  y política de privacidad para mi reserva.
-                </label>
-              </div>
-
-              <div className="md:col-span-2">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className={`w-full py-6 rounded-2xl font-black text-lg tracking-tighter transition-all transform active:scale-[0.98] flex items-center justify-center gap-2 ${
-                    submitSuccess
-                      ? "bg-emerald-600 text-white"
-                      : "bg-slate-900 text-white hover:bg-emerald-600"
-                  }`}
-                >
-                  <span>
-                    {isSubmitting
-                      ? "PROCESANDO REGISTRO..."
-                      : submitSuccess
-                      ? "¡REGISTRO EXITOSO!"
-                      : "CONTINUAR AL PAGO"}
-                  </span>
-                  {!isSubmitting && !submitSuccess && <ArrowRight size={20} />}
-                </button>
-              </div>
-            </form>
           </div>
         </div>
       </section>
@@ -516,15 +498,12 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <a
-              href="https://checkout.nequi.wompi.co/l/bEXEBu"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={openNequiModal}
-              className="block w-full py-8 bg-emerald-500 text-slate-950 rounded-3xl text-3xl font-black shadow-2xl hover:bg-emerald-400 transition-all transform hover:-translate-y-2 uppercase tracking-tighter"
+            <button
+              onClick={() => setShowRegistroModal(true)}
+              className="block w-full py-8 bg-emerald-500 text-slate-950 rounded-3xl text-3xl font-black shadow-2xl hover:bg-emerald-400 transition-all transform hover:-translate-y-2 uppercase tracking-tighter cursor-pointer"
             >
               RESERVAR POR NEQUI
-            </a>
+            </button>
             <p className="mt-8 text-slate-500 text-xs font-bold uppercase tracking-widest italic">
               Punto de encuentro: Barranquilla
             </p>
@@ -599,6 +578,138 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* Modal Registro */}
+      {showRegistroModal && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowRegistroModal(false);
+          }}
+        >
+          <div className="bg-white rounded-[3rem] p-8 md:p-12 max-w-xl w-full shadow-2xl border border-slate-100 relative overflow-hidden max-h-[90vh] overflow-y-auto">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full -mr-16 -mt-16"></div>
+            
+            <button
+              onClick={() => setShowRegistroModal(false)}
+              className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 transition-all cursor-pointer"
+            >
+              ✕
+            </button>
+
+            <div className="text-center mb-8">
+              <h2 className="text-sm font-bold text-emerald-600 tracking-[0.3em] uppercase mb-4">
+                Paso 1 de 2
+              </h2>
+              <h3 className="text-3xl md:text-4xl font-black tracking-tighter uppercase">
+                Datos del{" "}
+                <span className="text-emerald-500 italic">Viajero</span>
+              </h3>
+              <p className="text-slate-500 mt-2 text-sm">
+                Completa tus datos para habilitar el pago de reserva.
+              </p>
+            </div>
+
+            <form
+              onSubmit={handleFormSubmit}
+              className="grid grid-cols-1 md:grid-cols-2 gap-5"
+            >
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">
+                  Nombre
+                </label>
+                <input
+                  type="text"
+                  name="nombre"
+                  required
+                  placeholder="Ej: Juan"
+                  className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all placeholder:text-slate-300"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">
+                  Apellido
+                </label>
+                <input
+                  type="text"
+                  name="apellido"
+                  required
+                  placeholder="Ej: Perez"
+                  className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all placeholder:text-slate-300"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">
+                  WhatsApp
+                </label>
+                <input
+                  type="tel"
+                  name="whatsapp"
+                  required
+                  placeholder="300 000 0000"
+                  className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all placeholder:text-slate-300"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">
+                  Correo Electrónico
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  placeholder="tu@email.com"
+                  className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all placeholder:text-slate-300"
+                />
+              </div>
+
+              <div className="md:col-span-2 flex items-center gap-3 py-3">
+                <input
+                  type="checkbox"
+                  id="datos-modal"
+                  name="tratamiento_datos"
+                  required
+                  className="w-5 h-5 accent-emerald-500 cursor-pointer"
+                />
+                <label
+                  htmlFor="datos-modal"
+                  className="text-xs text-slate-500 leading-tight cursor-pointer"
+                >
+                  Acepto el{" "}
+                  <span className="font-bold text-slate-700">
+                    tratamiento de datos personales
+                  </span>{" "}
+                  y política de privacidad para mi reserva.
+                </label>
+              </div>
+
+              <div className="md:col-span-2">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={`w-full py-5 rounded-2xl font-black text-lg tracking-tighter transition-all transform active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer ${
+                    submitSuccess
+                      ? "bg-emerald-600 text-white"
+                      : "bg-slate-900 text-white hover:bg-emerald-600"
+                  }`}
+                >
+                  <span>
+                    {isSubmitting
+                      ? "PROCESANDO REGISTRO..."
+                      : submitSuccess
+                      ? "¡REGISTRO EXITOSO!"
+                      : "CONTINUAR AL PAGO"}
+                  </span>
+                  {!isSubmitting && !submitSuccess && <ArrowRight size={20} />}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Modal WhatsApp */}
       {showWhatsAppModal && (
@@ -685,17 +796,16 @@ export default function Home() {
               ¡REGISTRO EXITOSO!
             </h3>
             <p className="text-slate-500 mb-6 leading-tight">
-              Tus datos han sido guardados. Ahora te llevaremos a la plataforma
-              de pago.
+              Tus datos han sido guardados. Te redirigiremos a la plataforma
+              de pago en <span className="font-black text-emerald-600">{countdown}</span> segundos.
             </p>
             <button
               onClick={() => {
-                setShowSuccessModal(false);
-                window.location.href = "https://checkout.nequi.wompi.co/l/leIwcI";
+                window.location.href = "https://checkout.nequi.wompi.co/l/4NTTQO";
               }}
-              className="w-full py-4 bg-emerald-600 text-white rounded-2xl font-black hover:bg-emerald-700 transition-colors uppercase tracking-tight"
+              className="w-full py-4 bg-emerald-600 text-white rounded-2xl font-black hover:bg-emerald-700 transition-colors uppercase tracking-tight cursor-pointer"
             >
-              Ir a pagar ahora
+              Ir a pagar ahora ({countdown})
             </button>
           </div>
         </div>
