@@ -455,60 +455,68 @@ export default function Home() {
       </section>
 
       {/* Reserva y Fechas */}
-      <section id="reserva" className="py-24 px-6 bg-white">
+      <section id="reserva" className="py-12 md:py-24 px-4 md:px-6 bg-white">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="bg-slate-900 rounded-[4rem] p-12 md:p-24 text-white shadow-3xl border border-white/5">
-            <h2 className="text-5xl font-black mb-12 tracking-tighter uppercase italic">
+          <div className="bg-slate-900 rounded-3xl md:rounded-[4rem] p-6 sm:p-10 md:p-16 lg:p-24 text-white shadow-2xl border border-white/5">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-6 md:mb-12 tracking-tighter uppercase italic">
               ASEGURA TU CUPO
             </h2>
-            <div className="grid md:grid-cols-2 gap-8 mb-16 text-left">
-              <div className="bg-white/5 border border-white/10 p-8 rounded-3xl flex items-center gap-5 hover:bg-emerald-500/10 transition-all cursor-default">
-                <Calendar className="text-emerald-400" size={32} />
-                <div>
-                  <div className="font-black text-2xl tracking-tight leading-none mb-1 text-emerald-400">
+            
+            {/* Fechas */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8 mb-8 md:mb-16">
+              <div className="bg-white/5 border border-white/10 p-4 sm:p-6 md:p-8 rounded-2xl md:rounded-3xl flex items-center gap-3 sm:gap-5 hover:bg-emerald-500/10 transition-all cursor-default">
+                <Calendar className="text-emerald-400 shrink-0" size={28} />
+                <div className="text-left">
+                  <div className="font-black text-lg sm:text-xl md:text-2xl tracking-tight leading-none mb-1 text-emerald-400">
                     11 ENERO
                   </div>
-                  <div className="text-[10px] text-slate-400 uppercase tracking-widest font-black">
+                  <div className="text-[8px] sm:text-[10px] text-slate-400 uppercase tracking-wider md:tracking-widest font-black">
                     DOMINGO 2026 - ÚLTIMOS CUPOS
                   </div>
                 </div>
               </div>
-              <div className="bg-white/5 border border-white/10 p-8 rounded-3xl flex items-center gap-5 hover:bg-emerald-500/10 transition-all cursor-default">
-                <Calendar className="text-emerald-400" size={32} />
-                <div>
-                  <div className="font-black text-2xl tracking-tight leading-none mb-1">
+              <div className="bg-white/5 border border-white/10 p-4 sm:p-6 md:p-8 rounded-2xl md:rounded-3xl flex items-center gap-3 sm:gap-5 hover:bg-emerald-500/10 transition-all cursor-default">
+                <Calendar className="text-emerald-400 shrink-0" size={28} />
+                <div className="text-left">
+                  <div className="font-black text-lg sm:text-xl md:text-2xl tracking-tight leading-none mb-1">
                     01 FEBRERO
                   </div>
-                  <div className="text-[10px] text-slate-400 uppercase tracking-widest font-black">
+                  <div className="text-[8px] sm:text-[10px] text-slate-400 uppercase tracking-wider md:tracking-widest font-black">
                     DOMINGO 2026 - DISPONIBLE
                   </div>
                 </div>
               </div>
             </div>
-            <div className="mb-16">
-              <div className="text-7xl md:text-8xl font-black mb-6 tracking-tighter leading-none">
-                $290.000{" "}
-                <span className="text-xl text-slate-500 font-normal uppercase tracking-[0.3em]">
-                  COP
-                </span>
+            
+            {/* Precio */}
+            <div className="mb-8 md:mb-16">
+              <div className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black mb-4 md:mb-6 tracking-tighter leading-none">
+                $290.000
               </div>
-              <div className="flex flex-col items-center gap-4">
-                <p className="text-emerald-400 font-black uppercase tracking-[0.2em] text-sm bg-emerald-500/10 inline-block px-8 py-3 rounded-full border border-emerald-500/30 shadow-lg shadow-emerald-500/10">
-                  Reserva con solo $60.000 por persona
+              <span className="text-sm sm:text-base md:text-xl text-slate-500 font-normal uppercase tracking-[0.2em] md:tracking-[0.3em]">
+                COP
+              </span>
+              <div className="flex flex-col items-center gap-4 mt-4 md:mt-6">
+                <p className="text-emerald-400 font-black uppercase tracking-[0.1em] md:tracking-[0.2em] text-xs sm:text-sm bg-emerald-500/10 inline-block px-4 sm:px-6 md:px-8 py-2 sm:py-3 rounded-full border border-emerald-500/30 shadow-lg shadow-emerald-500/10">
+                  Reserva con solo $60.000/persona
                 </p>
               </div>
             </div>
+            
+            {/* Botón */}
             <button
               onClick={() => setShowRegistroModal(true)}
-              className="block w-full py-8 bg-emerald-500 text-slate-950 rounded-3xl text-3xl font-black shadow-2xl hover:bg-emerald-400 transition-all transform hover:-translate-y-2 uppercase tracking-tighter cursor-pointer"
+              className="block w-full py-5 sm:py-6 md:py-8 bg-emerald-500 text-slate-950 rounded-2xl md:rounded-3xl text-xl sm:text-2xl md:text-3xl font-black shadow-2xl hover:bg-emerald-400 transition-all transform hover:-translate-y-2 active:scale-[0.98] uppercase tracking-tighter cursor-pointer"
             >
               RESERVAR POR NEQUI
             </button>
-            <p className="mt-8 text-slate-500 text-xs font-bold uppercase tracking-widest italic">
+            
+            <p className="mt-6 md:mt-8 text-slate-500 text-[10px] sm:text-xs font-bold uppercase tracking-widest italic">
               Punto de encuentro: Barranquilla
             </p>
-            <div className="mt-6 pt-6 border-t border-white/10">
-              <p className="text-slate-500 text-xs">
+            
+            <div className="mt-4 md:mt-6 pt-4 md:pt-6 border-t border-white/10">
+              <p className="text-slate-500 text-[10px] sm:text-xs">
                 ¿Necesitas cancelar? Escríbenos por{" "}
                 <a
                   href="https://wa.me/573209344964?text=Hola!%20Necesito%20cancelar%20mi%20reserva%20de%20Minca%20Mágica"
