@@ -1,45 +1,134 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-inter);
+  /* Typography */
+  --font-body: var(--font-plus-jakarta);
+  --font-display: var(--font-cormorant);
+
+  /* Brand palette — Luxury Travel */
+  --color-surface: #F5F2ED;        /* warm cream — primary bg */
+  --color-surface-dark: #EDEAE3;   /* slightly darker cream */
+  --color-ink: #0D1511;            /* near-black with green undertone */
+  --color-ink-muted: #5C6460;      /* muted text */
+  --color-teal: #1B4D5C;           /* brand teal, kept */
+  --color-teal-deep: #0F2E38;      /* darker teal for contrast */
+  --color-teal-light: #2A6678;     /* lighter teal */
+  --color-mint: #D4E5E2;           /* soft mint accent */
+  --color-copper: #B5763A;         /* copper/gold accent */
+  --color-copper-light: #D4A574;   /* light copper */
+  --color-wa: #25D366;             /* WhatsApp */
+  --color-border: #D8D4CC;         /* warm border */
+  --color-border-dark: #B5B0A6;    /* darker border */
+
+  /* Old names kept for backward compat during transition */
+  --color-brand-base: #F5F2ED;
+  --color-brand-text: #0D1511;
+  --color-brand-teal: #1B4D5C;
+  --color-brand-teal-light: #2A6678;
+  --color-brand-mint: #D4E5E2;
+  --color-brand-wa: #25D366;
+  --color-brand-muted: #5C6460;
+  --color-brand-border: #D8D4CC;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+/* ── Base ─────────────────────────────────────────── */
+html { scroll-behavior: smooth; }
 
 body {
-  font-family: var(--font-inter), 'Inter', sans-serif;
+  font-family: var(--font-plus-jakarta), 'Plus Jakarta Sans', ui-sans-serif, sans-serif;
+  background-color: #F5F2ED;
+  color: #0D1511;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* ── Display font utility ─────────────────────────── */
+.font-display {
+  font-family: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif;
+}
+
+/* ── Hero zoom ────────────────────────────────────── */
 @keyframes zoom-slow {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.1);
-  }
+  from { transform: scale(1); }
+  to   { transform: scale(1.06); }
 }
-
 .hero-zoom {
-  animation: zoom-slow 20s linear infinite alternate;
+  animation: zoom-slow 20s ease-in-out infinite alternate;
 }
 
-.premium-logo-glow:hover {
-  filter: drop-shadow(0 0 15px rgba(52, 211, 153, 0.8));
-  transform: scale(1.05);
+/* ── Logos carousel ───────────────────────────────── */
+@keyframes scroll-logos {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.logos-track {
+  animation: scroll-logos 32s linear infinite;
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+.logos-track:hover { animation-play-state: paused; }
+
+/* ── Trip ticker ──────────────────────────────────── */
+@keyframes scroll-ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.ticker-track {
+  animation: scroll-ticker 40s linear infinite;
+  display: flex;
+  width: max-content;
+  align-items: center;
+  white-space: nowrap;
 }
 
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
+/* ── Grain texture overlay ────────────────────────── */
+.grain::after {
+  content: '';
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 9999;
 }
 
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+/* ── Thin underline link ──────────────────────────── */
+.link-underline {
+  position: relative;
+  text-decoration: none;
+}
+.link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.3s ease;
+}
+.link-underline:hover::after { width: 100%; }
+
+/* ── Section divider line ─────────────────────────── */
+.section-rule {
+  border: none;
+  border-top: 1px solid #D8D4CC;
+  margin: 0;
+}
+
+/* ── Focus visible ────────────────────────────────── */
+*:focus-visible {
+  outline: 1.5px solid #1B4D5C;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── Editorial number/stat ────────────────────────── */
+.stat-number {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-feature-settings: 'lnum' 1, 'tnum' 1;
 }

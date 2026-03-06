@@ -1,16 +1,26 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Cormorant_Garamond, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["300", "400", "600", "700", "900"],
-  variable: "--font-inter",
+  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-cormorant",
+  display: "swap",
+});
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-plus-jakarta",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Minca Mágica | Luisito el Viajero",
-  description: "El escape que tu alma estaba pidiendo. Reconecta con la Sierra Nevada saliendo desde Barranquilla.",
+  title: "Luisito El Viajero | Creador de Contenido · Turismo · Marcas",
+  description:
+    "Más de 10 años recorriendo Colombia y el mundo. Creador de contenido, estratega en turismo y aliado digital para marcas. Trabajemos juntos.",
   icons: {
     icon: "/Luisito_png_cfhgb1.png",
     apple: "/Luisito_png_cfhgb1.png",
@@ -24,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className="scroll-smooth">
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${cormorant.variable} ${plusJakarta.variable} font-sans antialiased`}>
         {children}
       </body>
     </html>
